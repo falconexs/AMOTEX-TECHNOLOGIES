@@ -1,0 +1,1531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMOTEX - Autonomous Systems Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: #ffffff;
+            color: #000000;
+            line-height: 1.6;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            font-size: 1rem;
+            font-weight: 400;
+            color: #333333;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(0px);
+            background-color: rgba(255, 255, 255, 0);
+        }
+
+        header.scrolled {
+            backdrop-filter: blur(10px);
+            background-color: rgba(255, 255, 255, 0.7);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            min-height: 64px;
+            padding: 0.35rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-container {
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        .logo-container.visible {
+            opacity: 1;
+        }
+
+        .logo-container img {
+            width: 200px;
+            height: auto;
+            display: block;
+        }
+
+        nav {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            align-items: center;
+            transition: gap 0.3s ease;
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+        }
+
+        .language-switcher {
+            display: inline-flex;
+            align-items: center;
+            border: 1px solid rgba(0, 0, 0, 0.12);
+            border-radius: 999px;
+            padding: 0.2rem;
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+
+        .lang-btn {
+            border: 0;
+            background: transparent;
+            color: #666666;
+            font: inherit;
+            font-size: 0.82rem;
+            font-weight: 600;
+            padding: 0.38rem 0.75rem;
+            border-radius: 999px;
+            cursor: pointer;
+            transition: background-color 0.25s ease, color 0.25s ease;
+        }
+
+        .lang-btn.active {
+            background-color: #000000;
+            color: #ffffff;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #000000;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: opacity 0.3s ease, color 0.3s ease, transform 0.3s ease;
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background-color: #000000;
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        header.compact nav {
+            gap: 1rem;
+        }
+
+        header.compact nav a {
+            width: 14px;
+            height: 14px;
+            font-size: 0;
+            color: transparent;
+        }
+
+        header.compact nav a::after {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            bottom: auto;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #111111;
+            opacity: 0.7;
+            transition: transform 0.3s ease, opacity 0.3s ease, background-color 0.3s ease;
+        }
+
+        header.compact nav a::before {
+            content: attr(data-label);
+            position: absolute;
+            top: calc(100% + 12px);
+            left: 50%;
+            transform: translateX(-50%) translateY(-6px);
+            padding: 0.35rem 0.6rem;
+            border-radius: 6px;
+            background-color: rgba(0, 0, 0, 0.88);
+            color: #ffffff;
+            font-size: 0.8rem;
+            font-weight: 500;
+            line-height: 1;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+        header.compact nav a:hover::after {
+            width: 10px;
+            transform: translate(-50%, -50%) scale(1.15);
+            opacity: 1;
+        }
+
+        header.compact nav a:hover::before {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        header.compact .header-controls {
+            gap: 1rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .hero-logo {
+            width: 60%;
+            max-width: 600px;
+            height: auto;
+            margin-bottom: 3rem;
+            opacity: 0;
+            animation: fadeIn 1.2s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin-bottom: 2rem;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            opacity: 0;
+            animation: slideUp 0.8s ease-out 0.2s forwards;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: #666666;
+            margin-bottom: 2rem;
+            font-weight: 400;
+            opacity: 0;
+            animation: slideUp 0.8s ease-out 0.4s forwards;
+        }
+
+        .hero-note {
+            font-size: 0.9rem;
+            color: #999999;
+            margin-bottom: 2.5rem;
+            opacity: 0;
+            animation: slideUp 0.8s ease-out 0.6s forwards;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            opacity: 0;
+            animation: slideUp 0.8s ease-out 0.8s forwards;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            border-radius: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background-color: #000000;
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background-color: #1a1a1a;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: #000000;
+            border: 1.5px solid #000000;
+        }
+
+        .btn-secondary:hover {
+            background-color: #000000;
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+
+        /* Parallax */
+        .parallax-bg {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .parallax-element {
+            position: absolute;
+            opacity: 0.03;
+            font-size: 8rem;
+            font-weight: 700;
+            letter-spacing: -0.05em;
+            white-space: nowrap;
+            pointer-events: none;
+        }
+
+        /* Dividers */
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.1), transparent);
+            margin: 0;
+        }
+
+        /* Sections */
+        section {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 6rem 2rem;
+            opacity: 0;
+            animation: fadeInSection 0.8s ease-out forwards;
+            position: relative;
+        }
+
+        @keyframes fadeInSection {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        section.observe {
+            opacity: 0;
+            animation: fadeInSection 0.8s ease-out forwards;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: #666666;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        /* About Section */
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            margin-top: 3rem;
+        }
+
+        .about-text {
+            line-height: 1.8;
+        }
+
+        .about-text p {
+            margin-bottom: 1.5rem;
+            font-size: 1.05rem;
+            color: #444444;
+        }
+
+        .about-highlight {
+            background-color: #f5f5f5;
+            padding: 2.5rem;
+            border-radius: 8px;
+            margin-top: 2rem;
+        }
+
+        /* How It Works */
+        .how-it-works {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .feature-block {
+            text-align: center;
+            padding: 2rem;
+            border-radius: 8px;
+            background-color: #f8f8f8;
+            transition: all 0.3s ease;
+        }
+
+        .feature-block:hover {
+            background-color: #f0f0f0;
+            transform: translateY(-4px);
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #ffffff;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-block:hover .feature-icon {
+            background-color: #000000;
+        }
+
+        .feature-icon svg {
+            width: 40px;
+            height: 40px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-block:hover .feature-icon svg {
+            stroke: #ffffff;
+        }
+
+        .feature-block h3 {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .feature-block p {
+            font-size: 0.95rem;
+            color: #555555;
+            line-height: 1.7;
+        }
+
+        /* ATP Section */
+        .atp-content {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .atp-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 2rem;
+            margin-top: 2.5rem;
+        }
+
+        .atp-item {
+            padding: 2rem;
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .atp-item:hover {
+            background-color: #000000;
+            color: #ffffff;
+            transform: scale(1.05);
+        }
+
+        /* Divisions Cards */
+        .divisions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .division-card {
+            padding: 2.5rem;
+            background-color: #f8f8f8;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            border: 1px solid #efefef;
+        }
+
+        .division-card:hover {
+            background-color: #000000;
+            color: #ffffff;
+            transform: translateY(-8px);
+            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .division-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .division-card p {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: #555555;
+        }
+
+        .division-card:hover p {
+            color: #e0e0e0;
+        }
+
+        /* Roadmap */
+        .roadmap-intro {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 3rem;
+        }
+
+        .roadmap-intro p {
+            font-size: 1rem;
+            color: #666666;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .timeline {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+            position: relative;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 30px;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.2), transparent);
+            display: none;
+        }
+
+        @media (min-width: 769px) {
+            .timeline::before {
+                display: block;
+            }
+        }
+
+        .timeline-stage {
+            padding: 2rem;
+            background-color: #f8f8f8;
+            border-radius: 8px;
+            border-left: 3px solid #000000;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .timeline-stage::before {
+            content: '';
+            position: absolute;
+            top: -32px;
+            left: 0;
+            width: 12px;
+            height: 12px;
+            background-color: #000000;
+            border-radius: 50%;
+            border: 3px solid #ffffff;
+            box-shadow: 0 0 0 1px #000000;
+        }
+
+        @media (max-width: 768px) {
+            .timeline-stage::before {
+                display: none;
+            }
+        }
+
+        .timeline-stage-number {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background-color: #000000;
+            color: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .timeline-stage:hover {
+            background-color: #f0f0f0;
+            transform: translateY(-4px);
+        }
+
+        .timeline-stage h4 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #000000;
+        }
+
+        .timeline-timeframe {
+            font-size: 0.85rem;
+            color: #888888;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .timeline-stage ul {
+            list-style: none;
+            font-size: 0.9rem;
+            color: #555555;
+        }
+
+        .timeline-stage li {
+            margin-bottom: 0.8rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .timeline-stage li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: #000000;
+        }
+
+        /* Vision Disclaimer */
+        .vision-disclaimer {
+            background-color: #f5f5f5;
+            padding: 3rem;
+            border-radius: 8px;
+            text-align: center;
+            border-left: 4px solid #000000;
+            max-width: 600px;
+            margin: 3rem auto 0;
+        }
+
+        .vision-disclaimer p {
+            font-size: 0.95rem;
+            color: #555555;
+            line-height: 1.8;
+        }
+
+        /* Partners Section */
+        .partners-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+            text-align: center;
+        }
+
+        .partner-item {
+            padding: 2rem;
+            background-color: #f8f8f8;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.95rem;
+            color: #666666;
+            transition: all 0.3s ease;
+        }
+
+        .partner-item:hover {
+            background-color: #efefef;
+            transform: scale(1.03);
+        }
+
+        /* Contact Section */
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 3rem;
+            margin-top: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .contact-item {
+            padding: 2rem;
+            background-color: #f8f8f8;
+            border-radius: 8px;
+            border-left: 3px solid #000000;
+        }
+
+        .contact-item h4 {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #888888;
+            margin-bottom: 1rem;
+        }
+
+        .contact-item p {
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: #000000;
+            line-height: 1.6;
+        }
+
+        .contact-item a {
+            color: #000000;
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .contact-item a:hover {
+            opacity: 0.6;
+        }
+
+        /* Final CTA */
+        .final-cta {
+            text-align: center;
+            padding: 4rem 2rem;
+            border-top: 1px solid #efefef;
+            border-bottom: 1px solid #efefef;
+        }
+
+        .final-cta h2 {
+            margin-bottom: 2rem;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #f8f8f8;
+            padding: 3rem 2rem;
+            text-align: center;
+            border-top: 1px solid #efefef;
+        }
+
+        footer p {
+            font-size: 0.9rem;
+            color: #888888;
+        }
+
+        /* Section borders */
+        section:not(.hero) {
+            border-top: 1px solid #f0f0f0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            h2 {
+                font-size: 1.8rem;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-logo {
+                width: 80%;
+            }
+
+            .button-group {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .about-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            nav {
+                gap: 1rem;
+            }
+
+            nav a {
+                font-size: 0.85rem;
+            }
+
+            .division-card {
+                padding: 2rem;
+            }
+
+            .contact-info {
+                grid-template-columns: 1fr;
+            }
+
+            .header-content {
+                min-height: 56px;
+                padding: 0.35rem 1rem;
+            }
+
+            .header-controls {
+                gap: 0.8rem;
+            }
+
+            .lang-btn {
+                padding: 0.32rem 0.6rem;
+                font-size: 0.76rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            h2 {
+                font-size: 1.4rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+
+            section {
+                padding: 3rem 1rem;
+            }
+
+            nav {
+                display: none;
+            }
+
+            .header-controls {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .logo-container img {
+                width: 160px;
+            }
+
+            .how-it-works {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .timeline {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header id="header">
+        <div class="header-content">
+            <div class="logo-container" id="headerLogo">
+                <img src="main-site/logos/amotex-long-logo.png" alt="AMOTEX">
+            </div>
+            <div class="header-controls">
+                <nav id="headerNav">
+                    <a href="#about" data-i18n="nav.about" data-label="About">About</a>
+                    <a href="#platform" data-i18n="nav.platform" data-label="Platform">Platform</a>
+                    <a href="#divisions" data-i18n="nav.divisions" data-label="Divisions">Divisions</a>
+                    <a href="#roadmap" data-i18n="nav.roadmap" data-label="Roadmap">Roadmap</a>
+                    <a href="#contact" data-i18n="nav.contact" data-label="Contact">Contact</a>
+                </nav>
+                <div class="language-switcher" aria-label="Language switcher">
+                    <button class="lang-btn active" type="button" data-lang="en">EN</button>
+                    <button class="lang-btn" type="button" data-lang="ru">RU</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <img src="main-site/logos/amotex-square-logo.png" alt="AMOTEX Logo" class="hero-logo">
+        <div class="hero-content">
+            <h1 data-i18n="hero.title">INTELLIGENCE IN PROJECT. POWER IN ACTION.</h1>
+            <p class="hero-subtitle" data-i18n="hero.subtitle">Modular autonomous systems for land, air, and water.</p>
+            <p class="hero-note" data-i18n="hero.note">Early-stage startup. Building a 10-year vision of autonomous systems.</p>
+            <div class="button-group">
+                <button class="btn btn-primary" data-action="explore" data-i18n="hero.primaryCta">Explore Platform</button>
+                <button class="btn btn-secondary" data-action="partnership" data-i18n="hero.secondaryCta">Request Partnership</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about">
+        <div class="section-title">
+            <h2 data-i18n="about.title">What is AMOTEX</h2>
+        </div>
+        <div class="about-content">
+            <div class="about-text">
+                <p data-i18n="about.body1">AMOTEX is a technology holding building modular autonomous systems across land, air, and water.</p>
+                <p data-i18n="about.body2">We don't build isolated devices — we build a platform.</p>
+                <p style="color: #000000; font-weight: 600;" data-i18n="about.body3">One intelligence core connecting sensors, modules, and execution systems.</p>
+            </div>
+            <div class="about-highlight">
+                <h3 data-i18n="about.highlightTitle">Core Architecture</h3>
+                <p data-i18n="about.highlightBody">Our modular approach allows seamless adaptation across multiple deployment environments. The unified intelligence layer ensures consistent behavior regardless of physical platform, reducing development time and operational complexity.</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- How It Works -->
+    <section id="how-it-works">
+        <div class="section-title">
+            <h2 data-i18n="how.title">How It Works</h2>
+        </div>
+        <div class="how-it-works">
+            <div class="feature-block">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <circle cx="12" cy="12" r="8"></circle>
+                        <path d="M12 8v8M8 12h8"></path>
+                    </svg>
+                </div>
+                <h3 data-i18n="how.coreTitle">Core</h3>
+                <p data-i18n="how.coreBody">AI Brain: Central intelligence layer processing sensor data and decision-making logic across all platforms.</p>
+            </div>
+            <div class="feature-block">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <rect x="4" y="4" width="5" height="5"></rect>
+                        <rect x="15" y="4" width="5" height="5"></rect>
+                        <rect x="4" y="15" width="5" height="5"></rect>
+                        <rect x="15" y="15" width="5" height="5"></rect>
+                    </svg>
+                </div>
+                <h3 data-i18n="how.modulesTitle">Modules</h3>
+                <p data-i18n="how.modulesBody">Sensors & Hardware: Interchangeable components for environmental sensing, computation, and actuation.</p>
+            </div>
+            <div class="feature-block">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M12 2L4 7v10c0 5.5 8 8 8 8s8-2.5 8-8V7l-8-5z"></path>
+                    </svg>
+                </div>
+                <h3 data-i18n="how.platformsTitle">Platforms</h3>
+                <p data-i18n="how.platformsBody">Air / Land / Water: Physical deployments leveraging identical intelligence with environment-specific hardware.</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- ATP Platform Section -->
+    <section id="platform">
+        <div class="atp-content">
+            <div class="section-title">
+                <h2 data-i18n="platform.title">ATP — Autonomous Tactical Platform</h2>
+                <p class="section-subtitle" data-i18n="platform.subtitle">One intelligence. Multiple environments.</p>
+            </div>
+            <p style="color: #666666; margin: 2rem 0; font-size: 1.05rem;" data-i18n="platform.body">The logic remains the same. Only the physical form changes.</p>
+            <div class="atp-list">
+                <div class="atp-item" data-i18n="platform.air">Air</div>
+                <div class="atp-item" data-i18n="platform.land">Land</div>
+                <div class="atp-item" data-i18n="platform.water">Water</div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- Divisions Section -->
+    <section id="divisions">
+        <div class="section-title">
+            <h2 data-i18n="divisions.title">Our Divisions</h2>
+        </div>
+        <div class="divisions-grid">
+            <div class="division-card">
+                <h3 data-i18n="divisions.homeTitle">AMOTEX Home Systems</h3>
+                <p data-i18n="divisions.homeBody">Autonomous home system with modular architecture. Smart integration for residential automation and monitoring.</p>
+            </div>
+            <div class="division-card">
+                <h3 data-i18n="divisions.agroTitle">AMOTEX Agro</h3>
+                <p data-i18n="divisions.agroBody">Data-driven agriculture and automation. Precision farming solutions leveraging autonomous platforms for crop monitoring and optimization.</p>
+            </div>
+            <div class="division-card">
+                <h3 data-i18n="divisions.geoTitle">AMOTEX Geo</h3>
+                <p data-i18n="divisions.geoBody">Mapping, surveying, spatial analysis. Advanced geospatial solutions for infrastructure assessment and environmental monitoring.</p>
+            </div>
+            <div class="division-card">
+                <h3 data-i18n="divisions.stratoTitle">AMOTEX STRATO</h3>
+                <p data-i18n="divisions.stratoBody">High-altitude and atmospheric systems. Operations in stratosphere and troposphere for climate research and telecommunications.</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- Roadmap Section -->
+    <section id="roadmap">
+        <div class="section-title">
+            <h2 data-i18n="roadmap.title">Real Development & Roadmap</h2>
+        </div>
+        <div class="roadmap-intro">
+            <p data-i18n="roadmap.intro">AMOTEX is currently in an early development stage, starting with modular drone systems and rapid prototyping. The roadmap below reflects a real execution path toward full autonomous platforms.</p>
+        </div>
+        <div class="timeline">
+            <div class="timeline-stage">
+                <div class="timeline-stage-number">1</div>
+                <h4 data-i18n="roadmap.stage1Title">Entry</h4>
+                <p class="timeline-timeframe" data-i18n="roadmap.stage1Time">0–6 months</p>
+                <ul>
+                    <li data-i18n="roadmap.stage1Item1">Modular drone attachments</li>
+                    <li data-i18n="roadmap.stage1Item2">3D printing</li>
+                    <li data-i18n="roadmap.stage1Item3">First sales</li>
+                </ul>
+            </div>
+            <div class="timeline-stage">
+                <div class="timeline-stage-number">2</div>
+                <h4 data-i18n="roadmap.stage2Title">Structure</h4>
+                <p class="timeline-timeframe" data-i18n="roadmap.stage2Time">6–18 months</p>
+                <ul>
+                    <li data-i18n="roadmap.stage2Item1">Standardized modules</li>
+                    <li data-i18n="roadmap.stage2Item2">Product ecosystem</li>
+                    <li data-i18n="roadmap.stage2Item3">Small-scale production</li>
+                </ul>
+            </div>
+            <div class="timeline-stage">
+                <div class="timeline-stage-number">3</div>
+                <h4 data-i18n="roadmap.stage3Title">Professional</h4>
+                <p class="timeline-timeframe" data-i18n="roadmap.stage3Time">18–36 months</p>
+                <ul>
+                    <li data-i18n="roadmap.stage3Item1">Industrial drones</li>
+                    <li data-i18n="roadmap.stage3Item2">B2B solutions</li>
+                    <li data-i18n="roadmap.stage3Item3">Enterprise use</li>
+                </ul>
+            </div>
+            <div class="timeline-stage">
+                <div class="timeline-stage-number">4</div>
+                <h4 data-i18n="roadmap.stage4Title">Own Platform</h4>
+                <p class="timeline-timeframe" data-i18n="roadmap.stage4Time">2–4 years</p>
+                <ul>
+                    <li data-i18n="roadmap.stage4Item1">AMOTEX Aerial Platform (AATP)</li>
+                    <li data-i18n="roadmap.stage4Item2">Modular UAV</li>
+                    <li data-i18n="roadmap.stage4Item3">Early autonomy</li>
+                </ul>
+            </div>
+            <div class="timeline-stage">
+                <div class="timeline-stage-number">5</div>
+                <h4 data-i18n="roadmap.stage5Title">Scaling</h4>
+                <p class="timeline-timeframe" data-i18n="roadmap.stage5Time">3–6 years</p>
+                <ul>
+                    <li data-i18n="roadmap.stage5Item1">US expansion</li>
+                    <li data-i18n="roadmap.stage5Item2">Enterprise scale</li>
+                    <li data-i18n="roadmap.stage5Item3">Investment growth</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="vision-disclaimer">
+            <p data-i18n-html="roadmap.disclaimer"><strong>AMOTEX is an early-stage company.</strong> The systems described on this page represent a 10-year development vision currently in progress.</p>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- Partners Section -->
+    <section id="partners">
+        <div class="section-title">
+            <h2 data-i18n="partners.title">Our Partners</h2>
+        </div>
+        <div class="partners-content">
+            <div class="partner-item">AGCO</div>
+            <div class="partner-item">Archer Daniels Midland</div>
+            <div class="partner-item">ATLAS AI</div>
+            <div class="partner-item">Arizona Stratosphere Research Center</div>
+            <div class="partner-item">Red Desert Aerospace</div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- Contact Section -->
+    <section id="contact">
+        <div class="section-title">
+            <h2 data-i18n="contact.title">Get In Touch</h2>
+        </div>
+        <div class="contact-info">
+            <div class="contact-item">
+                <h4 data-i18n="contact.addressLabel">Address</h4>
+                <p data-i18n-html="contact.addressValue">205 N Central Avenue<br>Phoenix, AZ 85004<br>United States</p>
+            </div>
+            <div class="contact-item">
+                <h4 data-i18n="contact.emailLabel">Email</h4>
+                <p><a href="mailto:hello@amotex.com">hello@amotex.com</a></p>
+            </div>
+            <div class="contact-item">
+                <h4 data-i18n="contact.phoneLabel">Phone</h4>
+                <p><a href="tel:+18007513985">+1 800 751 3985</a></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="final-cta">
+        <h2 data-i18n="finalCta.title">Build the future of autonomous systems with us.</h2>
+        <div class="button-group">
+            <button class="btn btn-primary" data-action="contact" data-i18n="finalCta.primary">Contact Us</button>
+            <button class="btn btn-secondary" data-action="partner" data-i18n="finalCta.secondary">Become a Partner</button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p data-i18n-html="footer.copy">&copy; 2026 AMOTEX. All rights reserved. Advanced autonomous systems platform.</p>
+    </footer>
+
+    <script>
+        const translations = {
+            en: {
+                pageTitle: 'AMOTEX - Autonomous Systems Platform',
+                nav: {
+                    about: 'About',
+                    platform: 'Platform',
+                    divisions: 'Divisions',
+                    roadmap: 'Roadmap',
+                    contact: 'Contact'
+                },
+                hero: {
+                    title: 'INTELLIGENCE IN PROJECT. POWER IN ACTION.',
+                    subtitle: 'Modular autonomous systems for land, air, and water.',
+                    note: 'Early-stage startup. Building a 10-year vision of autonomous systems.',
+                    primaryCta: 'Explore Platform',
+                    secondaryCta: 'Request Partnership'
+                },
+                about: {
+                    title: 'What is AMOTEX',
+                    body1: 'AMOTEX is a technology holding building modular autonomous systems across land, air, and water.',
+                    body2: 'We do not build isolated devices - we build a platform.',
+                    body3: 'One intelligence core connecting sensors, modules, and execution systems.',
+                    highlightTitle: 'Core Architecture',
+                    highlightBody: 'Our modular approach allows seamless adaptation across multiple deployment environments. The unified intelligence layer ensures consistent behavior regardless of physical platform, reducing development time and operational complexity.'
+                },
+                how: {
+                    title: 'How It Works',
+                    coreTitle: 'Core',
+                    coreBody: 'AI Brain: Central intelligence layer processing sensor data and decision-making logic across all platforms.',
+                    modulesTitle: 'Modules',
+                    modulesBody: 'Sensors & Hardware: Interchangeable components for environmental sensing, computation, and actuation.',
+                    platformsTitle: 'Platforms',
+                    platformsBody: 'Air / Land / Water: Physical deployments leveraging identical intelligence with environment-specific hardware.'
+                },
+                platform: {
+                    title: 'ATP - Autonomous Tactical Platform',
+                    subtitle: 'One intelligence. Multiple environments.',
+                    body: 'The logic remains the same. Only the physical form changes.',
+                    air: 'Air',
+                    land: 'Land',
+                    water: 'Water'
+                },
+                divisions: {
+                    title: 'Our Divisions',
+                    homeTitle: 'AMOTEX Home Systems',
+                    homeBody: 'Autonomous home system with modular architecture. Smart integration for residential automation and monitoring.',
+                    agroTitle: 'AMOTEX Agro',
+                    agroBody: 'Data-driven agriculture and automation. Precision farming solutions leveraging autonomous platforms for crop monitoring and optimization.',
+                    geoTitle: 'AMOTEX Geo',
+                    geoBody: 'Mapping, surveying, spatial analysis. Advanced geospatial solutions for infrastructure assessment and environmental monitoring.',
+                    stratoTitle: 'AMOTEX STRATO',
+                    stratoBody: 'High-altitude and atmospheric systems. Operations in stratosphere and troposphere for climate research and telecommunications.'
+                },
+                roadmap: {
+                    title: 'Real Development & Roadmap',
+                    intro: 'AMOTEX is currently in an early development stage, starting with modular drone systems and rapid prototyping. The roadmap below reflects a real execution path toward full autonomous platforms.',
+                    stage1Title: 'Entry',
+                    stage1Time: '0-6 months',
+                    stage1Item1: 'Modular drone attachments',
+                    stage1Item2: '3D printing',
+                    stage1Item3: 'First sales',
+                    stage2Title: 'Structure',
+                    stage2Time: '6-18 months',
+                    stage2Item1: 'Standardized modules',
+                    stage2Item2: 'Product ecosystem',
+                    stage2Item3: 'Small-scale production',
+                    stage3Title: 'Professional',
+                    stage3Time: '18-36 months',
+                    stage3Item1: 'Industrial drones',
+                    stage3Item2: 'B2B solutions',
+                    stage3Item3: 'Enterprise use',
+                    stage4Title: 'Own Platform',
+                    stage4Time: '2-4 years',
+                    stage4Item1: 'AMOTEX Aerial Platform (AATP)',
+                    stage4Item2: 'Modular UAV',
+                    stage4Item3: 'Early autonomy',
+                    stage5Title: 'Scaling',
+                    stage5Time: '3-6 years',
+                    stage5Item1: 'US expansion',
+                    stage5Item2: 'Enterprise scale',
+                    stage5Item3: 'Investment growth',
+                    disclaimer: '<strong>AMOTEX is an early-stage company.</strong> The systems described on this page represent a 10-year development vision currently in progress.'
+                },
+                partners: {
+                    title: 'Our Partners'
+                },
+                contact: {
+                    title: 'Get In Touch',
+                    addressLabel: 'Address',
+                    addressValue: '205 N Central Avenue<br>Phoenix, AZ 85004<br>United States',
+                    emailLabel: 'Email',
+                    phoneLabel: 'Phone'
+                },
+                finalCta: {
+                    title: 'Build the future of autonomous systems with us.',
+                    primary: 'Contact Us',
+                    secondary: 'Become a Partner'
+                },
+                footer: {
+                    copy: '&copy; 2026 AMOTEX. All rights reserved. Advanced autonomous systems platform.'
+                }
+            },
+            ru: {
+                pageTitle: 'AMOTEX - Платформа автономных систем',
+                nav: {
+                    about: 'О нас',
+                    platform: 'Платформа',
+                    divisions: 'Направления',
+                    roadmap: 'План',
+                    contact: 'Контакты'
+                },
+                hero: {
+                    title: 'ИНТЕЛЛЕКТ В ОСНОВЕ. СИЛА В ДЕЙСТВИИ.',
+                    subtitle: 'Модульные автономные системы для земли, воздуха и воды.',
+                    note: 'Стартап на ранней стадии. Строим 10-летнее видение автономных систем.',
+                    primaryCta: 'Изучить платформу',
+                    secondaryCta: 'Запросить партнерство'
+                },
+                about: {
+                    title: 'Что такое AMOTEX',
+                    body1: 'AMOTEX - это технологический холдинг, который создает модульные автономные системы для земли, воздуха и воды.',
+                    body2: 'Мы не делаем разрозненные устройства - мы строим платформу.',
+                    body3: 'Единое интеллектуальное ядро, которое связывает датчики, модули и исполнительные системы.',
+                    highlightTitle: 'Базовая архитектура',
+                    highlightBody: 'Наш модульный подход позволяет адаптировать решения под разные среды применения. Единый интеллектуальный слой обеспечивает стабильную логику работы вне зависимости от физической платформы, снижая сложность разработки и эксплуатации.'
+                },
+                how: {
+                    title: 'Как это работает',
+                    coreTitle: 'Ядро',
+                    coreBody: 'AI Brain: центральный интеллектуальный слой, который обрабатывает данные сенсоров и принимает решения для всех платформ.',
+                    modulesTitle: 'Модули',
+                    modulesBody: 'Сенсоры и железо: взаимозаменяемые компоненты для сбора данных, вычислений и управления.',
+                    platformsTitle: 'Платформы',
+                    platformsBody: 'Воздух / земля / вода: физические носители с общей логикой и специализированным оборудованием под среду.'
+                },
+                platform: {
+                    title: 'ATP - автономная тактическая платформа',
+                    subtitle: 'Один интеллект. Несколько сред.',
+                    body: 'Логика остается той же. Меняется только физическая форма.',
+                    air: 'Воздух',
+                    land: 'Земля',
+                    water: 'Вода'
+                },
+                divisions: {
+                    title: 'Наши направления',
+                    homeTitle: 'AMOTEX Home Systems',
+                    homeBody: 'Автономная домашняя система с модульной архитектурой. Умная интеграция для автоматизации и мониторинга жилых пространств.',
+                    agroTitle: 'AMOTEX Agro',
+                    agroBody: 'Автоматизация и аналитика для сельского хозяйства. Решения точного земледелия на базе автономных платформ для мониторинга и оптимизации.',
+                    geoTitle: 'AMOTEX Geo',
+                    geoBody: 'Картография, съемка и пространственный анализ. Геопространственные решения для оценки инфраструктуры и экологического мониторинга.',
+                    stratoTitle: 'AMOTEX STRATO',
+                    stratoBody: 'Высотные и атмосферные системы. Работа в стратосфере и тропосфере для климатических исследований и телекоммуникаций.'
+                },
+                roadmap: {
+                    title: 'Реальная разработка и дорожная карта',
+                    intro: 'Сейчас AMOTEX находится на ранней стадии развития, начиная с модульных дрон-систем и быстрого прототипирования. Ниже - реальный путь к полноценным автономным платформам.',
+                    stage1Title: 'Старт',
+                    stage1Time: '0-6 месяцев',
+                    stage1Item1: 'Модульные насадки для дронов',
+                    stage1Item2: '3D-печать',
+                    stage1Item3: 'Первые продажи',
+                    stage2Title: 'Структура',
+                    stage2Time: '6-18 месяцев',
+                    stage2Item1: 'Стандартизированные модули',
+                    stage2Item2: 'Продуктовая экосистема',
+                    stage2Item3: 'Малосерийное производство',
+                    stage3Title: 'Профессиональный этап',
+                    stage3Time: '18-36 месяцев',
+                    stage3Item1: 'Промышленные дроны',
+                    stage3Item2: 'B2B-решения',
+                    stage3Item3: 'Корпоративное применение',
+                    stage4Title: 'Собственная платформа',
+                    stage4Time: '2-4 года',
+                    stage4Item1: 'AMOTEX Aerial Platform (AATP)',
+                    stage4Item2: 'Модульный БПЛА',
+                    stage4Item3: 'Ранняя автономность',
+                    stage5Title: 'Масштабирование',
+                    stage5Time: '3-6 лет',
+                    stage5Item1: 'Выход в США',
+                    stage5Item2: 'Масштаб для enterprise',
+                    stage5Item3: 'Рост инвестиций',
+                    disclaimer: '<strong>AMOTEX - компания на ранней стадии.</strong> Системы, описанные на этой странице, отражают 10-летнее видение разработки, которое уже находится в работе.'
+                },
+                partners: {
+                    title: 'Наши партнеры'
+                },
+                contact: {
+                    title: 'Связаться с нами',
+                    addressLabel: 'Адрес',
+                    addressValue: '205 N Central Avenue<br>Phoenix, AZ 85004<br>США',
+                    emailLabel: 'Email',
+                    phoneLabel: 'Телефон'
+                },
+                finalCta: {
+                    title: 'Стройте будущее автономных систем вместе с нами.',
+                    primary: 'Связаться',
+                    secondary: 'Стать партнером'
+                },
+                footer: {
+                    copy: '&copy; 2026 AMOTEX. Все права защищены. Платформа передовых автономных систем.'
+                }
+            }
+        };
+
+        const getTranslation = (lang, key) => key.split('.').reduce((value, part) => value?.[part], translations[lang]);
+
+        const setLanguage = (lang) => {
+            const selectedLang = translations[lang] ? lang : 'en';
+            document.documentElement.lang = selectedLang;
+            document.title = translations[selectedLang].pageTitle;
+
+            document.querySelectorAll('[data-i18n]').forEach((element) => {
+                const value = getTranslation(selectedLang, element.dataset.i18n);
+                if (typeof value === 'string') {
+                    element.textContent = value;
+                    if (element.closest('nav')) {
+                        element.setAttribute('data-label', value);
+                    }
+                }
+            });
+
+            document.querySelectorAll('[data-i18n-html]').forEach((element) => {
+                const value = getTranslation(selectedLang, element.dataset.i18nHtml);
+                if (typeof value === 'string') {
+                    element.innerHTML = value;
+                }
+            });
+
+            document.querySelectorAll('.lang-btn').forEach((button) => {
+                button.classList.toggle('active', button.dataset.lang === selectedLang);
+            });
+
+            localStorage.setItem('amotex-language', selectedLang);
+        };
+
+        // Intersection Observer for scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        // Observe all sections
+        document.querySelectorAll('section:not(.hero)').forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(20px)';
+            section.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out';
+            observer.observe(section);
+        });
+
+        // Header scroll behavior
+        const header = document.getElementById('header');
+        const aboutSection = document.getElementById('about');
+
+        const updateHeaderState = () => {
+            const currentScroll = window.pageYOffset;
+            const compactThreshold = Math.max(60, aboutSection.offsetTop - 140);
+
+            if (currentScroll > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+
+            if (currentScroll >= compactThreshold) {
+                header.classList.add('compact');
+            } else {
+                header.classList.remove('compact');
+            }
+        };
+
+        window.addEventListener('scroll', updateHeaderState);
+        updateHeaderState();
+
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href !== '#') {
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                }
+            });
+        });
+
+        // Button click handlers
+        document.querySelectorAll('.btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const action = this.dataset.action;
+                if (action === 'explore') {
+                    document.getElementById('platform').scrollIntoView({ behavior: 'smooth' });
+                } else if (action === 'partnership' || action === 'contact' || action === 'partner') {
+                    document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        document.querySelectorAll('.lang-btn').forEach((button) => {
+            button.addEventListener('click', () => {
+                setLanguage(button.dataset.lang);
+            });
+        });
+
+        // Staggered animation for feature blocks
+        const featureBlocks = document.querySelectorAll('.feature-block, .division-card, .timeline-stage');
+        featureBlocks.forEach((block, index) => {
+            block.style.opacity = '0';
+            block.style.transform = 'translateY(20px)';
+            block.style.transition = `opacity 0.6s ease-out ${index * 0.1}s, transform 0.6s ease-out ${index * 0.1}s`;
+        });
+
+        const featureObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        featureBlocks.forEach(block => {
+            featureObserver.observe(block);
+        });
+
+        // Parallax effect
+        const parallaxElements = document.querySelectorAll('.parallax-element');
+        let parallaxSpeed = [];
+
+        parallaxElements.forEach((el, index) => {
+            parallaxSpeed[index] = (Math.random() * 0.3 + 0.1);
+        });
+
+        window.addEventListener('scroll', () => {
+            const scrollY = window.pageYOffset;
+            parallaxElements.forEach((el, index) => {
+                const offset = scrollY * parallaxSpeed[index];
+                el.style.transform = `translateY(${offset}px)`;
+            });
+        });
+
+        // Add subtle parallax background to sections
+        document.querySelectorAll('section').forEach((section, index) => {
+            if (index % 3 === 0) {
+                section.classList.add('parallax-bg');
+                const text = ['AMOTEX', 'AUTONOMOUS', 'SYSTEMS', 'PLATFORM', 'FUTURE'][index % 5];
+                const parallaxEl = document.createElement('div');
+                parallaxEl.className = 'parallax-element';
+                parallaxEl.textContent = text;
+                parallaxEl.style.left = Math.random() * 80 + '%';
+                parallaxEl.style.top = Math.random() * 60 + '%';
+                section.appendChild(parallaxEl);
+            }
+        });
+
+        setLanguage(localStorage.getItem('amotex-language') || 'en');
+    </script>
+</body>
+</html>
