@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMOTEX - Autonomous Systems Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: #ffffff;
+            color: #000000;
+            line-height: 1.6;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            font-size: 1rem;
+            font-weight: 400;
+            color: #333333;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(0px);
+            background-color: rgba(255, 255, 255, 0);
+        }
+
+        header.scrolled {
+            backdrop-filter: blur(10px);
+            background-color: rgba(255, 255, 255, 0.7);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-container {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .logo-container.visible {
+            opacity: 1;
+        }
+
+        .logo-container img {
+            height: 45px;
+            width: auto;
+        }
+
+        nav {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #000000;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: opacity 0.3s ease;
+            position: relative;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background-color: #000000;
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .hero-logo {
+            width: 60%;
+            max-width: 600px;
+            height: auto;
+            margin-bottom: 3rem;
+            opacity: 0;
+            animation: fadeIn 1.2s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin-bottom: 2rem;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            opacity: 0;
+            animation: slideUp 0.8s ease-out 0.2s forwards;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: #666666;
+            margin-bottom: 2rem;
+            font-weight: 400;
+            opacity: 0;
+            animation: slideUp 0.8s ease-out 0.4s forwards;
+        }
+
+        .hero-note {
+            font-size: 0.9rem;
+            color: #999999;
+            margin-bottom: 2.5rem;
+            opacity: 0;
+            animation: slideUp 0.8s ease-out 0.6s forwards;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            opacity: 0;
+            animation: slideUp 0.8s ease-out 0.8s forwards;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            border-radius: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background-color: #000000;
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background-color: #1a1a1a;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: #000000;
+            border: 1.5px solid #000000;
+        }
+
+        .btn-secondary:hover {
+            background-color: #000000;
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+
+        /* Parallax */
+        .parallax-bg {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .parallax-element {
+            position: absolute;
+            opacity: 0.03;
+            font-size: 8rem;
+            font-weight: 700;
+            letter-spacing: -0.05em;
+            white-space: nowrap;
+            pointer-events: none;
+        }
+
+        /* Dividers */
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.1), transparent);
+            margin: 0;
+        }
+
+        /* Sections */
+        section {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 6rem 2rem;
+            opacity: 0;
+            animation: fadeInSection 0.8s ease-out forwards;
+            position: relative;
+        }
+
+        @keyframes fadeInSection {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        section.observe {
+            opacity: 0;
+            animation: fadeInSection 0.8s ease-out forwards;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: #666666;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        /* About Section */
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            margin-top: 3rem;
+        }
+
+        .about-text {
+            line-height: 1.8;
+        }
+
+        .about-text p {
+            margin-bottom: 1.5rem;
+            font-size: 1.05rem;
+            color: #444444;
+        }
+
+        .about-highlight {
+            background-color: #f5f5f5;
+            padding: 2.5rem;
+            border-radius: 8px;
+            margin-top: 2rem;
+        }
+
+        /* How It Works */
+        .how-it-works {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .feature-block {
+            text-align: center;
+            padding: 2rem;
+            border-radius: 8px;
+            background-color: #f8f8f8;
+            transition: all 0.3s ease;
+        }
+
+        .feature-block:hover {
+            background-color: #f0f0f0;
+            transform: translateY(-4px);
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #ffffff;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-block:hover .feature-icon {
+            background-color: #000000;
+        }
+
+        .feature-icon svg {
+            width: 40px;
+            height: 40px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-block:hover .feature-icon svg {
+            stroke: #ffffff;
+        }
+
+        .feature-block h3 {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .feature-block p {
+            font-size: 0.95rem;
+            color: #555555;
+            line-height: 1.7;
+        }
+
+        /* ATP Section */
+        .atp-content {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .atp-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 2rem;
+            margin-top: 2.5rem;
+        }
+
+        .atp-item {
+            padding: 2rem;
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .atp-item:hover {
+            background-color: #000000;
+            color: #ffffff;
+            transform: scale(1.05);
+        }
+
+        /* Divisions Cards */
+        .divisions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .division-card {
+            padding: 2.5rem;
+            background-color: #f8f8f8;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            border: 1px solid #efefef;
+        }
+
+        .division-card:hover {
+            background-color: #000000;
+            color: #ffffff;
+            transform: translateY(-8px);
+            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .division-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .division-card p {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: #555555;
+        }
+
+        .division-card:hover p {
+            color: #e0e0e0;
+        }
+
+        /* Roadmap */
+        .roadmap-intro {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 3rem;
+        }
+
+        .roadmap-intro p {
+            font-size: 1rem;
+            color: #666666;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .timeline {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+            position: relative;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 30px;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.2), transparent);
+            display: none;
+        }
+
+        @media (min-width: 769px) {
+            .timeline::before {
+                display: block;
+            }
+        }
+
+        .timeline-stage {
+            padding: 2rem;
+            background-color: #f8f8f8;
+            border-radius: 8px;
+            border-left: 3px solid #000000;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .timeline-stage::before {
+            content: '';
+            position: absolute;
+            top: -32px;
+            left: 0;
+            width: 12px;
+            height: 12px;
+            background-color: #000000;
+            border-radius: 50%;
+            border: 3px solid #ffffff;
+            box-shadow: 0 0 0 1px #000000;
+        }
+
+        @media (max-width: 768px) {
+            .timeline-stage::before {
+                display: none;
+            }
+        }
+
+        .timeline-stage-number {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background-color: #000000;
+            color: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .timeline-stage:hover {
+            background-color: #f0f0f0;
+            transform: translateY(-4px);
+        }
+
+        .timeline-stage h4 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #000000;
+        }
+
+        .timeline-timeframe {
+            font-size: 0.85rem;
+            color: #888888;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .timeline-stage ul {
+            list-style: none;
+            font-size: 0.9rem;
+            color: #555555;
+        }
+
+        .timeline-stage li {
+            margin-bottom: 0.8rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .timeline-stage li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: #000000;
+        }
+
+        /* Vision Disclaimer */
+        .vision-disclaimer {
+            background-color: #f5f5f5;
+            padding: 3rem;
+            border-radius: 8px;
+            text-align: center;
+            border-left: 4px solid #000000;
+            max-width: 600px;
+            margin: 3rem auto 0;
+        }
+
+        .vision-disclaimer p {
+            font-size: 0.95rem;
+            color: #555555;
+            line-height: 1.8;
+        }
+
+        /* Partners Section */
+        .partners-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+            text-align: center;
+        }
+
+        .partner-item {
+            padding: 2rem;
+            background-color: #f8f8f8;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.95rem;
+            color: #666666;
+            transition: all 0.3s ease;
+        }
+
+        .partner-item:hover {
+            background-color: #efefef;
+            transform: scale(1.03);
+        }
+
+        /* Contact Section */
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 3rem;
+            margin-top: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .contact-item {
+            padding: 2rem;
+            background-color: #f8f8f8;
+            border-radius: 8px;
+            border-left: 3px solid #000000;
+        }
+
+        .contact-item h4 {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #888888;
+            margin-bottom: 1rem;
+        }
+
+        .contact-item p {
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: #000000;
+            line-height: 1.6;
+        }
+
+        .contact-item a {
+            color: #000000;
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .contact-item a:hover {
+            opacity: 0.6;
+        }
+
+        /* Final CTA */
+        .final-cta {
+            text-align: center;
+            padding: 4rem 2rem;
+            border-top: 1px solid #efefef;
+            border-bottom: 1px solid #efefef;
+        }
+
+        .final-cta h2 {
+            margin-bottom: 2rem;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #f8f8f8;
+            padding: 3rem 2rem;
+            text-align: center;
+            border-top: 1px solid #efefef;
+        }
+
+        footer p {
+            font-size: 0.9rem;
+            color: #888888;
+        }
+
+        /* Section borders */
+        section:not(.hero) {
+            border-top: 1px solid #f0f0f0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            h2 {
+                font-size: 1.8rem;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-logo {
+                width: 80%;
+            }
+
+            .button-group {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .about-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            nav {
+                gap: 1rem;
+            }
+
+            nav a {
+                font-size: 0.85rem;
+            }
+
+            .division-card {
+                padding: 2rem;
+            }
+
+            .contact-info {
+                grid-template-columns: 1fr;
+            }
+
+            .header-content {
+                padding: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            h2 {
+                font-size: 1.4rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+
+            section {
+                padding: 3rem 1rem;
+            }
+
+            nav {
+                display: none;
+            }
+
+            .how-it-works {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .timeline {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header id="header">
+        <div class="header-content">
+            <div class="logo-container" id="headerLogo">
+                <img src="main-site/logos/amotex-long-logo.jpeg" alt="AMOTEX">
+            </div>
+            <nav id="headerNav">
+                <a href="#about">About</a>
+                <a href="#platform">Platform</a>
+                <a href="#divisions">Divisions</a>
+                <a href="#roadmap">Roadmap</a>
+                <a href="#contact">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <img src="main-site/logos/amotex-square-logo.jpeg" alt="AMOTEX Logo" class="hero-logo">
+        <div class="hero-content">
+            <h1>INTELLIGENCE IN PROJECT. POWER IN ACTION.</h1>
+            <p class="hero-subtitle">Modular autonomous systems for land, air, and water.</p>
+            <p class="hero-note">Early-stage startup. Building a 10-year vision of autonomous systems.</p>
+            <div class="button-group">
+                <button class="btn btn-primary">Explore Platform</button>
+                <button class="btn btn-secondary">Request Partnership</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about">
+        <div class="section-title">
+            <h2>What is AMOTEX</h2>
+        </div>
+        <div class="about-content">
+            <div class="about-text">
+                <p>AMOTEX is a technology holding building modular autonomous systems across land, air, and water.</p>
+                <p>We don't build isolated devices — we build a platform.</p>
+                <p style="color: #000000; font-weight: 600;">One intelligence core connecting sensors, modules, and execution systems.</p>
+            </div>
+            <div class="about-highlight">
+                <h3>Core Architecture</h3>
+                <p>Our modular approach allows seamless adaptation across multiple deployment environments. The unified intelligence layer ensures consistent behavior regardless of physical platform, reducing development time and operational complexity.</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- How It Works -->
+    <section id="how-it-works">
+        <div class="section-title">
+            <h2>How It Works</h2>
+        </div>
+        <div class="how-it-works">
+            <div class="feature-block">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <circle cx="12" cy="12" r="8"></circle>
+                        <path d="M12 8v8M8 12h8"></path>
+                    </svg>
+                </div>
+                <h3>Core</h3>
+                <p>AI Brain: Central intelligence layer processing sensor data and decision-making logic across all platforms.</p>
+            </div>
+            <div class="feature-block">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <rect x="4" y="4" width="5" height="5"></rect>
+                        <rect x="15" y="4" width="5" height="5"></rect>
+                        <rect x="4" y="15" width="5" height="5"></rect>
+                        <rect x="15" y="15" width="5" height="5"></rect>
+                    </svg>
+                </div>
+                <h3>Modules</h3>
+                <p>Sensors & Hardware: Interchangeable components for environmental sensing, computation, and actuation.</p>
+            </div>
+            <div class="feature-block">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M12 2L4 7v10c0 5.5 8 8 8 8s8-2.5 8-8V7l-8-5z"></path>
+                    </svg>
+                </div>
+                <h3>Platforms</h3>
+                <p>Air / Land / Water: Physical deployments leveraging identical intelligence with environment-specific hardware.</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- ATP Platform Section -->
+    <section id="platform">
+        <div class="atp-content">
+            <div class="section-title">
+                <h2>ATP — Autonomous Tactical Platform</h2>
+                <p class="section-subtitle">One intelligence. Multiple environments.</p>
+            </div>
+            <p style="color: #666666; margin: 2rem 0; font-size: 1.05rem;">The logic remains the same. Only the physical form changes.</p>
+            <div class="atp-list">
+                <div class="atp-item">Air</div>
+                <div class="atp-item">Land</div>
+                <div class="atp-item">Water</div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- Divisions Section -->
+    <section id="divisions">
+        <div class="section-title">
+            <h2>Our Divisions</h2>
+        </div>
+        <div class="divisions-grid">
+            <div class="division-card">
+                <h3>AMOTEX Home Systems</h3>
+                <p>Autonomous home system with modular architecture. Smart integration for residential automation and monitoring.</p>
+            </div>
+            <div class="division-card">
+                <h3>AMOTEX Agro</h3>
+                <p>Data-driven agriculture and automation. Precision farming solutions leveraging autonomous platforms for crop monitoring and optimization.</p>
+            </div>
+            <div class="division-card">
+                <h3>AMOTEX Geo</h3>
+                <p>Mapping, surveying, spatial analysis. Advanced geospatial solutions for infrastructure assessment and environmental monitoring.</p>
+            </div>
+            <div class="division-card">
+                <h3>AMOTEX STRATO</h3>
+                <p>High-altitude and atmospheric systems. Operations in stratosphere and troposphere for climate research and telecommunications.</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- Roadmap Section -->
+    <section id="roadmap">
+        <div class="section-title">
+            <h2>Real Development & Roadmap</h2>
+        </div>
+        <div class="roadmap-intro">
+            <p>AMOTEX is currently in an early development stage, starting with modular drone systems and rapid prototyping. The roadmap below reflects a real execution path toward full autonomous platforms.</p>
+        </div>
+        <div class="timeline">
+            <div class="timeline-stage">
+                <div class="timeline-stage-number">1</div>
+                <h4>Entry</h4>
+                <p class="timeline-timeframe">0–6 months</p>
+                <ul>
+                    <li>Modular drone attachments</li>
+                    <li>3D printing</li>
+                    <li>First sales</li>
+                </ul>
+            </div>
+            <div class="timeline-stage">
+                <div class="timeline-stage-number">2</div>
+                <h4>Structure</h4>
+                <p class="timeline-timeframe">6–18 months</p>
+                <ul>
+                    <li>Standardized modules</li>
+                    <li>Product ecosystem</li>
+                    <li>Small-scale production</li>
+                </ul>
+            </div>
+            <div class="timeline-stage">
+                <div class="timeline-stage-number">3</div>
+                <h4>Professional</h4>
+                <p class="timeline-timeframe">18–36 months</p>
+                <ul>
+                    <li>Industrial drones</li>
+                    <li>B2B solutions</li>
+                    <li>Enterprise use</li>
+                </ul>
+            </div>
+            <div class="timeline-stage">
+                <div class="timeline-stage-number">4</div>
+                <h4>Own Platform</h4>
+                <p class="timeline-timeframe">2–4 years</p>
+                <ul>
+                    <li>AMOTEX Aerial Platform (AATP)</li>
+                    <li>Modular UAV</li>
+                    <li>Early autonomy</li>
+                </ul>
+            </div>
+            <div class="timeline-stage">
+                <div class="timeline-stage-number">5</div>
+                <h4>Scaling</h4>
+                <p class="timeline-timeframe">3–6 years</p>
+                <ul>
+                    <li>US expansion</li>
+                    <li>Enterprise scale</li>
+                    <li>Investment growth</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="vision-disclaimer">
+            <p><strong>AMOTEX is an early-stage company.</strong> The systems described on this page represent a 10-year development vision currently in progress.</p>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- Partners Section -->
+    <section id="partners">
+        <div class="section-title">
+            <h2>Our Partners</h2>
+        </div>
+        <div class="partners-content">
+            <div class="partner-item">AGCO</div>
+            <div class="partner-item">Archer Daniels Midland</div>
+            <div class="partner-item">ATLAS AI</div>
+            <div class="partner-item">Arizona Stratosphere Research Center</div>
+            <div class="partner-item">Red Desert Aerospace</div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- Contact Section -->
+    <section id="contact">
+        <div class="section-title">
+            <h2>Get In Touch</h2>
+        </div>
+        <div class="contact-info">
+            <div class="contact-item">
+                <h4>Address</h4>
+                <p>205 N Central Avenue<br>Phoenix, AZ 85004<br>United States</p>
+            </div>
+            <div class="contact-item">
+                <h4>Email</h4>
+                <p><a href="mailto:hello@amotex.com">hello@amotex.com</a></p>
+            </div>
+            <div class="contact-item">
+                <h4>Phone</h4>
+                <p><a href="tel:+18007513985">+1 800 751 3985</a></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="final-cta">
+        <h2>Build the future of autonomous systems with us.</h2>
+        <div class="button-group">
+            <button class="btn btn-primary">Contact Us</button>
+            <button class="btn btn-secondary">Become a Partner</button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 AMOTEX. All rights reserved. Advanced autonomous systems platform.</p>
+    </footer>
+
+    <script>
+        // Intersection Observer for scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        // Observe all sections
+        document.querySelectorAll('section:not(.hero)').forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(20px)';
+            section.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out';
+            observer.observe(section);
+        });
+
+        // Header scroll behavior
+        const header = document.getElementById('header');
+        const headerLogo = document.getElementById('headerLogo');
+        let lastScroll = 0;
+
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+
+            // Header backdrop blur on scroll
+            if (currentScroll > 50) {
+                header.classList.add('scrolled');
+                headerLogo.classList.add('visible');
+            } else {
+                header.classList.remove('scrolled');
+                headerLogo.classList.remove('visible');
+            }
+
+            lastScroll = currentScroll;
+        });
+
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href !== '#') {
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                }
+            });
+        });
+
+        // Button click handlers
+        document.querySelectorAll('.btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const text = this.textContent;
+                if (text.includes('Explore')) {
+                    document.getElementById('platform').scrollIntoView({ behavior: 'smooth' });
+                } else if (text.includes('Partnership')) {
+                    document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+                } else if (text.includes('Contact')) {
+                    document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+                } else if (text.includes('Partner')) {
+                    document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Staggered animation for feature blocks
+        const featureBlocks = document.querySelectorAll('.feature-block, .division-card, .timeline-stage');
+        featureBlocks.forEach((block, index) => {
+            block.style.opacity = '0';
+            block.style.transform = 'translateY(20px)';
+            block.style.transition = `opacity 0.6s ease-out ${index * 0.1}s, transform 0.6s ease-out ${index * 0.1}s`;
+        });
+
+        const featureObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        featureBlocks.forEach(block => {
+            featureObserver.observe(block);
+        });
+
+        // Parallax effect
+        const parallaxElements = document.querySelectorAll('.parallax-element');
+        let parallaxSpeed = [];
+
+        parallaxElements.forEach((el, index) => {
+            parallaxSpeed[index] = (Math.random() * 0.3 + 0.1);
+        });
+
+        window.addEventListener('scroll', () => {
+            const scrollY = window.pageYOffset;
+            parallaxElements.forEach((el, index) => {
+                const offset = scrollY * parallaxSpeed[index];
+                el.style.transform = `translateY(${offset}px)`;
+            });
+        });
+
+        // Add subtle parallax background to sections
+        document.querySelectorAll('section').forEach((section, index) => {
+            if (index % 3 === 0) {
+                section.classList.add('parallax-bg');
+                const text = ['AMOTEX', 'AUTONOMOUS', 'SYSTEMS', 'PLATFORM', 'FUTURE'][index % 5];
+                const parallaxEl = document.createElement('div');
+                parallaxEl.className = 'parallax-element';
+                parallaxEl.textContent = text;
+                parallaxEl.style.left = Math.random() * 80 + '%';
+                parallaxEl.style.top = Math.random() * 60 + '%';
+                section.appendChild(parallaxEl);
+            }
+        });
+    </script>
+</body>
+</html>
